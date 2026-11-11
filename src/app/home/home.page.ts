@@ -152,14 +152,24 @@ export class HomePage implements OnInit {
       return false;
     }
 
+    if (/\d/.test(this.nombres)) {
+      this.errorFormulario = 'El nombre no debe contener números.';
+      return false;
+    }
+
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!this.correo || !regexCorreo.test(this.correo.trim())) {
       this.errorFormulario = 'Ingrese un correo electrónico válido.';
       return false;
     }
 
-    if (!this.telefono || this.telefono.trim().length < 7) {
-      this.errorFormulario = 'Ingrese un número telefónico válido (mínimo 7 dígitos).';
+    if (!this.telefono || !/^\d+$/.test(this.telefono.trim())) {
+      this.errorFormulario = 'El teléfono no debe contener letras ni caracteres especiales.';
+      return false;
+    }
+
+    if (this.telefono.trim().length !== 10) {
+      this.errorFormulario = 'El teléfono debe tener exactamente 10 dígitos.';
       return false;
     }
 
