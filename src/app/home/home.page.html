@@ -18,7 +18,7 @@
   <div *ngIf="seccionActiva === 'registro'">
     <ion-card>
       <ion-card-header>
-        <ion-card-title>Datos personales</ion-card-title>
+        <ion-card-title>1. Datos personales</ion-card-title>
       </ion-card-header>
       <ion-card-content>
         <ion-item>
@@ -66,5 +66,162 @@
         </ion-item>
       </ion-card-content>
     </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>2. Perfil profesional</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-select
+            label="Cargo al que postula *"
+            labelPlacement="stacked"
+            placeholder="Seleccione un cargo"
+            [(ngModel)]="cargo"
+          >
+            <ion-select-option value="Desarrollador móvil">Desarrollador móvil</ion-select-option>
+            <ion-select-option value="Analista de datos">Analista de datos</ion-select-option>
+            <ion-select-option value="Diseñador UX/UI">Diseñador UX/UI</ion-select-option>
+            <ion-select-option value="Soporte TI">Soporte TI</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item lines="none" class="ion-margin-top">
+          <ion-label position="stacked">Nivel académico *</ion-label>
+        </ion-item>
+        <ion-radio-group [(ngModel)]="nivelAcademico">
+          <ion-item>
+            <ion-radio value="Bachillerato">Bachillerato</ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-radio value="Tecnología">Tecnología</ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-radio value="Tercer nivel">Tercer nivel</ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-radio value="Posgrado">Posgrado</ion-radio>
+          </ion-item>
+        </ion-radio-group>
+
+        <ion-item class="ion-margin-top">
+          <ion-input
+            label="Años de experiencia (0 a 50) *"
+            labelPlacement="stacked"
+            type="number"
+            min="0"
+            max="50"
+            placeholder="0"
+            [(ngModel)]="experienciaAnios"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item lines="none" class="ion-margin-top">
+          <ion-label position="stacked">Modalidad de trabajo *</ion-label>
+        </ion-item>
+        <ion-segment [(ngModel)]="modalidad" class="ion-margin-bottom">
+          <ion-segment-button value="Presencial">
+            <ion-label>Presencial</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="Híbrida">
+            <ion-label>Híbrida</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="Remota">
+            <ion-label>Remota</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+
+        <ion-item lines="none">
+          <ion-label position="stacked">Habilidades técnicas (seleccione al menos 1) *</ion-label>
+        </ion-item>
+        <ion-list>
+          <ion-item *ngFor="let hab of listaHabilidades">
+            <ion-checkbox
+              [checked]="habilidadesSeleccionadas.includes(hab)"
+              (ionChange)="toggleHabilidad(hab, $event)"
+            >
+              {{ hab }}
+            </ion-checkbox>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>3. Disponibilidad y aspiración</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="stacked">Fecha disponible para iniciar *</ion-label>
+          <ion-datetime-button datetime="fechaDispModal"></ion-datetime-button>
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime
+                id="fechaDispModal"
+                presentation="date"
+                [min]="fechaHoy"
+                [(ngModel)]="fechaDisponibilidad"
+              ></ion-datetime>
+            </ng-template>
+          </ion-modal>
+        </ion-item>
+
+        <ion-item class="ion-margin-top">
+          <ion-input
+            label="Aspiración salarial (USD) *"
+            labelPlacement="stacked"
+            type="number"
+            min="1"
+            placeholder="1200"
+            [(ngModel)]="aspiracionSalarial"
+          ></ion-input>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>4. Presentación y términos</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-textarea
+            label="Resumen profesional (mínimo 30 caracteres) *"
+            labelPlacement="stacked"
+            rows="4"
+            placeholder="Describa su perfil y trayectoria laboral..."
+            [(ngModel)]="resumen"
+          ></ion-textarea>
+        </ion-item>
+
+        <ion-item lines="none" class="ion-margin-top">
+          <ion-checkbox [(ngModel)]="consentimiento">
+            Acepto el tratamiento de datos para pruebas del MVP *
+          </ion-checkbox>
+        </ion-item>
+
+        <ion-button
+          expand="block"
+          class="ion-margin-top"
+          [disabled]="guardando"
+          (click)="guardarCandidato()"
+        >
+          <ion-spinner *ngIf="guardando" name="crescent"></ion-spinner>
+          <span *ngIf="!guardando">Guardar postulación</span>
+        </ion-button>
+
+        <ion-text color="danger" *ngIf="errorFormulario">
+          <p class="ion-padding-top ion-text-center">{{ errorFormulario }}</p>
+        </ion-text>
+      </ion-card-content>
+    </ion-card>
   </div>
+
+  <ion-toast
+    [isOpen]="mostrarToast"
+    [message]="mensajeToast"
+    [duration]="3000"
+    (didDismiss)="mostrarToast = false"
+  ></ion-toast>
 </ion-content>
