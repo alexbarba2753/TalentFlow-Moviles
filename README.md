@@ -26,20 +26,20 @@ Funcionalidades principales:
 - TypeScript
 
 Componentes de Ionic utilizados:
-- ion-input: captura de texto para nombres, correo, telefono, experiencia y aspiracion salarial.
-- ion-datetime / ion-datetime-button: seleccion y formateo de fechas (nacimiento y disponibilidad).
-- ion-select y ion-select-option: seleccion del cargo a postular.
-- ion-radio-group y ion-radio: seleccion de nivel academico.
-- ion-segment y ion-segment-button: seleccion de modalidad de trabajo y navegacion entre secciones.
-- ion-checkbox: seleccion multiple de habilidades tecnicas y aceptacion obligatoria del consentimiento.
-- ion-textarea: redaccion del resumen profesional del postulante.
-- ion-button: accion de guardado y navegacion.
-- ion-card, ion-card-header, ion-card-title, ion-card-content: agrupacion visual de las secciones del formulario y tarjetas de postulantes.
-- ion-modal: despliegue de selectores de fecha y vista detallada del candidato.
-- ion-spinner: indicador de carga en peticiones asincronas a Firestore.
-- ion-toast: mensaje de exito tras guardar una postulacion.
-- ion-chip: etiquetas visuales para mostrar las habilidades de cada candidato.
-- ion-list e ion-item: organizacion estructurada de los campos y listas.
+- `ion-input`: captura de texto para nombres, correo, teléfono, experiencia y aspiración salarial.
+- `ion-datetime` / `ion-datetime-button`: selección y formateo de fechas (nacimiento y disponibilidad).
+- `ion-select` y `ion-select-option`: selección del cargo a postular.
+- `ion-radio-group` y `ion-radio`: selección de nivel académico.
+- `ion-segment` y `ion-segment-button`: selección de modalidad de trabajo y navegación entre secciones.
+- `ion-checkbox`: selección múltiple de habilidades técnicas y aceptación obligatoria del consentimiento.
+- `ion-textarea`: redacción del resumen profesional del postulante.
+- `ion-button`: acción de guardado y navegación.
+- `ion-card`, `ion-card-header`, `ion-card-title`, `ion-card-content`: agrupación visual de las secciones del formulario y tarjetas de postulantes.
+- `ion-modal`: despliegue de selectores de fecha y vista detallada del candidato.
+- `ion-spinner`: indicador de carga en peticiones asíncronas a Firestore.
+- `ion-toast`: mensaje de éxito tras guardar una postulación.
+- `ion-chip`: etiquetas visuales para mostrar las habilidades de cada candidato.
+- `ion-list` e `ion-item`: organización estructurada de los campos y listas.
 
 ## 5. Arquitectura del proyecto
 El proyecto sigue la arquitectura recomendada para aplicaciones de Angular Standalone, separando la interfaz de usuario de la logica de persistencia:
@@ -107,8 +107,6 @@ npm install
 
 4. Iniciar el servidor local de desarrollo:
 ```bash
-npm start
-# o alternativamente:
 ionic serve
 ```
 
@@ -149,6 +147,3 @@ Explicacion de seguridad:
 - Por que no son aptas para produccion: en un entorno real cualquier usuario con acceso al proyecto podria enviar solicitudes de lectura y escritura masivas, o consultar datos personales sin autenticacion.
 - Mejoras para un entorno productivo: se debe integrar Firebase Authentication para que solo los reclutadores autorizados puedan leer las postulaciones (`request.auth != null && request.auth.token.role == 'recruiter'`), y los candidatos solo puedan crear o consultar su propio registro basado en su UID.
 
-## 10. Distribucion del trabajo
-- Mateo Barba: Configuracion del proyecto Ionic, integracion de Firebase SDK, desarrollo del servicio `CandidatosService` y logica de conexion con Cloud Firestore.
-- Daniel Diaz: Diseno de la interfaz de usuario con componentes Ionic, implementacion de validaciones del formulario, vistas de listado y modal de detalle.
