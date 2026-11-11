@@ -3,7 +3,7 @@
     <ion-title>TalentFlow</ion-title>
   </ion-toolbar>
   <ion-toolbar color="primary">
-    <ion-segment [(ngModel)]="seccionActiva">
+    <ion-segment [(ngModel)]="seccionActiva" (ionChange)="cambiarSeccion($event)">
       <ion-segment-button value="registro">
         <ion-label>Registrar</ion-label>
       </ion-segment-button>
@@ -15,6 +15,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <!-- seccion de formulario de postulacion -->
   <div *ngIf="seccionActiva === 'registro'">
     <ion-card>
       <ion-card-header>
@@ -217,6 +218,132 @@
       </ion-card-content>
     </ion-card>
   </div>
+
+  <!-- seccion de consulta de postulantes -->
+  <div *ngIf="seccionActiva === 'listado'">
+    <div class="ion-text-center ion-padding" *ngIf="cargando">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando postulantes desde Firestore...</p>
+    </div>
+
+    <div *ngIf="!cargando && candidatos.length === 0" class="ion-text-center ion-padding">
+      <p>No hay postulantes registrados todavía.</p>
+      <ion-button fill="outline" size="small" (click)="cargarCandidatos()">
+        Actualizar lista
+      </ion-button>
+    </div>
+
+    <div *ngIf="!cargando && candidatos.length > 0">
+      <ion-card *ngFor="let item of candidatos" button (click)="verDetalle(item)">
+        <ion-card-header>
+          <ion-card-title>{{ item.nombres }}</ion-card-title>
+          <ion-card-subtitle>{{ item.cargo }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <p><strong>Modalidad:</strong> {{ item.modalidad }}</p>
+          <p><strong>Experiencia:</strong> {{ item.experienciaAnios }} años</p>
+          <p><strong>Correo:</strong> {{ item.correo }}</p>
+          <div class="ion-margin-top">
+            <ion-chip *ngFor="let hab of item.habilidades" color="primary">
+              <ion-label>{{ hab }}</ion-label>
+            </ion-chip>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- modal para detalle completo del postulante -->
+  <ion-modal [isOpen]="mostrarModalDetalle" (didDismiss)="cerrarDetalle()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Detalle del candidato</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="cerrarDetalle()">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding" *ngIf="candidatoSeleccionado">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>{{ candidatoSeleccionado.nombres }}</ion-card-title>
+            <ion-card-subtitle>{{ candidatoSeleccionado.cargo }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item>
+                <ion-label>
+                  <h3>Correo</h3>
+                  <p>{{ candidatoSeleccionado.correo }}</p>
+                </ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label>
+                  <h3>Teléfono</h3>
+                  <p>{{ candidatoSeleccionado.telefono }}</p>
+                </ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label>
+                  <h3>Fecha de nacimiento</h3>
+                  <p>{{ candidatoSeleccionado.fechaNacimiento }}</p>
+                </ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label>
+                  <h3>Nivel académico</h3>
+                  <p>{{ candidatoSeleccionado.nivelAcademico }}</p>
+                </ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label>
+                  <h3>Años de experiencia</h3>
+                  <p>{{ candidatoSeleccionado.experienciaAnios }} años</p>
+                </ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label>
+                  <h3>Modalidad</h3>
+                  <p>{{ candidatoSeleccionado.modalidad }}</p>
+                </ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label>
+                  <h3>Fecha disponible</h3>
+                  <p>{{ candidatoSeleccionado.fechaDisponibilidad }}</p>
+                </ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label>
+                  <h3>Aspiración salarial</h3>
+                  <p>${{ candidatoSeleccionado.aspiracionSalarial }} USD</p>
+                </ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label>
+                  <h3>Habilidades</h3>
+                  <p>{{ candidatoSeleccionado.habilidades.join(', ') }}</p>
+                </ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label>
+                  <h3>Resumen profesional</h3>
+                  <p>{{ candidatoSeleccionado.resumen }}</p>
+                </ion-label>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label>
+                  <h3>Consentimiento de datos</h3>
+                  <p>{{ candidatoSeleccionado.consentimiento ? 'Aceptado' : 'No aceptado' }}</p>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 
   <ion-toast
     [isOpen]="mostrarToast"

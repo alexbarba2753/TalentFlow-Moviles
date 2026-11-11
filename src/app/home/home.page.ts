@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -12,6 +12,7 @@ import {
   IonCard,
   IonCardHeader,
   IonCardTitle,
+  IonCardSubtitle,
   IonCardContent,
   IonItem,
   IonInput,
@@ -28,9 +29,12 @@ import {
   IonSpinner,
   IonList,
   IonText,
-  IonToast
+  IonToast,
+  IonChip,
+  IonButtons
 } from '@ionic/angular';
 import { CandidatosService } from '../services/candidatos.service';
+import { Candidato } from '../models/candidato.model';
 
 @Component({
   selector: 'app-home',
@@ -50,6 +54,7 @@ import { CandidatosService } from '../services/candidatos.service';
     IonCard,
     IonCardHeader,
     IonCardTitle,
+    IonCardSubtitle,
     IonCardContent,
     IonItem,
     IonInput,
@@ -66,10 +71,12 @@ import { CandidatosService } from '../services/candidatos.service';
     IonSpinner,
     IonList,
     IonText,
-    IonToast
+    IonToast,
+    IonChip,
+    IonButtons
   ]
 })
-export class HomePage {
+export class HomePage implements OnInit {
   private candidatosService = inject(CandidatosService);
 
   seccionActiva: string = 'registro';
@@ -108,7 +115,22 @@ export class HomePage {
   mensajeToast: string = '';
   mostrarToast: boolean = false;
 
+  candidatos: Candidato[] = [];
+  cargando: boolean = false;
+  candidatoSeleccionado: Candidato | null = null;
+  mostrarModalDetalle: boolean = false;
+
   constructor() {}
+
+  async ngOnInit() {
+    await this.cargarCandidatos();
+  }
+
+  cambiarSeccion(event: any) {
+    if (event.detail.value === 'listado') {
+      this.cargarCandidatos();
+    }
+  }
 
   toggleHabilidad(habilidad: string, event: any) {
     const checked = event.detail.checked;
@@ -217,12 +239,36 @@ export class HomePage {
       this.limpiarFormulario();
       this.mensajeToast = 'Postulación guardada correctamente.';
       this.mostrarToast = true;
+      await this.cargarCandidatos();
     } catch (error) {
       console.error(error);
       this.errorFormulario = 'Error al guardar en Firestore. Verifique la conexión.';
     } finally {
       this.guardando = false;
     }
+  }
+
+  async cargarCandidatos() {
+    this.cargando = true;
+    try {
+      this.candidatos = await this.candidatosService.obtenerCandidatos();
+    } catch (error) {
+      console.error(error);
+      this.mensajeToast = 'Error al cargar candidatos de Firestore.';
+      this.mostrarToast = true;
+    } finally {
+      this.cargando = false;
+    }
+  }
+
+  verDetalle(item: Candidato) {
+    this.candidatoSeleccionado = item;
+    this.mostrarModalDetalle = true;
+  }
+
+  cerrarDetalle() {
+    this.mostrarModalDetalle = false;
+    this.candidatoSeleccionado = null;
   }
 
   limpiarFormulario() {
