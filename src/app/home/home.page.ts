@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -78,6 +78,7 @@ import { Candidato } from '../models/candidato.model';
 })
 export class HomePage implements OnInit {
   private candidatosService = inject(CandidatosService);
+  private cdr = inject(ChangeDetectorRef);
 
   seccionActiva: string = 'registro';
 
@@ -127,9 +128,11 @@ export class HomePage implements OnInit {
   }
 
   cambiarSeccion(event: any) {
-    if (event.detail.value === 'listado') {
+    this.seccionActiva = event.detail.value;
+    if (this.seccionActiva === 'listado') {
       this.cargarCandidatos();
     }
+    this.cdr.detectChanges();
   }
 
   toggleHabilidad(habilidad: string, event: any) {
@@ -245,11 +248,13 @@ export class HomePage implements OnInit {
       this.errorFormulario = 'Error al guardar en Firestore. Verifique la conexión.';
     } finally {
       this.guardando = false;
+      this.cdr.detectChanges();
     }
   }
 
   async cargarCandidatos() {
     this.cargando = true;
+    this.cdr.detectChanges();
     try {
       this.candidatos = await this.candidatosService.obtenerCandidatos();
     } catch (error) {
@@ -258,6 +263,7 @@ export class HomePage implements OnInit {
       this.mostrarToast = true;
     } finally {
       this.cargando = false;
+      this.cdr.detectChanges();
     }
   }
 
