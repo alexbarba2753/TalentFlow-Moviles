@@ -1,21 +1,70 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title> Blank </ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>TalentFlow</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-segment [(ngModel)]="seccionActiva">
+      <ion-segment-button value="registro">
+        <ion-label>Registrar</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="listado">
+        <ion-label>Postulantes</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <div *ngIf="seccionActiva === 'registro'">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Datos personales</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-input
+            label="Nombres y apellidos *"
+            labelPlacement="stacked"
+            placeholder="Ej. Ana Pérez"
+            [(ngModel)]="nombres"
+          ></ion-input>
+        </ion-item>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>
-      Start with Ionic
-      <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a>
-    </p>
+        <ion-item>
+          <ion-input
+            label="Correo electrónico *"
+            labelPlacement="stacked"
+            type="email"
+            placeholder="correo@ejemplo.com"
+            [(ngModel)]="correo"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input
+            label="Teléfono *"
+            labelPlacement="stacked"
+            type="tel"
+            placeholder="0990000000"
+            [(ngModel)]="telefono"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Fecha de nacimiento *</ion-label>
+          <ion-datetime-button datetime="fechaNacimientoModal"></ion-datetime-button>
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime
+                id="fechaNacimientoModal"
+                presentation="date"
+                [max]="fechaHoy"
+                [(ngModel)]="fechaNacimiento"
+              ></ion-datetime>
+            </ng-template>
+          </ion-modal>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>
