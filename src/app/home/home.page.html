@@ -51,20 +51,29 @@
           ></ion-input>
         </ion-item>
 
-        <ion-item>
-          <ion-label position="stacked">Fecha de nacimiento *</ion-label>
-          <ion-datetime-button datetime="fechaNacimientoModal"></ion-datetime-button>
-          <ion-modal [keepContentsMounted]="true">
-            <ng-template>
-              <ion-datetime
-                id="fechaNacimientoModal"
-                presentation="date"
-                [max]="fechaHoy"
-                [(ngModel)]="fechaNacimiento"
-              ></ion-datetime>
-            </ng-template>
-          </ion-modal>
+        <ion-item id="trigger-fecha-nacimiento" button="true" lines="full">
+          <ion-input
+            label="Fecha de nacimiento *"
+            labelPlacement="stacked"
+            [value]="fechaNacimiento"
+            readonly="true"
+            placeholder="Seleccione su fecha de nacimiento"
+          ></ion-input>
+          <ion-icon slot="end" name="calendar-outline" color="primary"></ion-icon>
         </ion-item>
+
+        <ion-modal trigger="trigger-fecha-nacimiento" class="modal-datetime" [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime
+              presentation="date"
+              [max]="fechaHoy"
+              [(ngModel)]="fechaNacimiento"
+              [showDefaultButtons]="true"
+              doneText="Confirmar"
+              cancelText="Cancelar"
+            ></ion-datetime>
+          </ng-template>
+        </ion-modal>
       </ion-card-content>
     </ion-card>
 
@@ -153,20 +162,29 @@
         <ion-card-title>3. Disponibilidad y aspiración</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <ion-item>
-          <ion-label position="stacked">Fecha disponible para iniciar *</ion-label>
-          <ion-datetime-button datetime="fechaDispModal"></ion-datetime-button>
-          <ion-modal [keepContentsMounted]="true">
-            <ng-template>
-              <ion-datetime
-                id="fechaDispModal"
-                presentation="date"
-                [min]="fechaHoy"
-                [(ngModel)]="fechaDisponibilidad"
-              ></ion-datetime>
-            </ng-template>
-          </ion-modal>
+        <ion-item id="trigger-fecha-disp" button="true" lines="full">
+          <ion-input
+            label="Fecha disponible para iniciar *"
+            labelPlacement="stacked"
+            [value]="fechaDisponibilidad"
+            readonly="true"
+            placeholder="Seleccione fecha de disponibilidad"
+          ></ion-input>
+          <ion-icon slot="end" name="calendar-outline" color="primary"></ion-icon>
         </ion-item>
+
+        <ion-modal trigger="trigger-fecha-disp" class="modal-datetime" [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime
+              presentation="date"
+              [min]="fechaHoy"
+              [(ngModel)]="fechaDisponibilidad"
+              [showDefaultButtons]="true"
+              doneText="Confirmar"
+              cancelText="Cancelar"
+            ></ion-datetime>
+          </ng-template>
+        </ion-modal>
 
         <ion-item class="ion-margin-top">
           <ion-input

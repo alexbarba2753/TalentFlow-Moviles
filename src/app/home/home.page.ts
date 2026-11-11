@@ -17,7 +17,6 @@ import {
   IonItem,
   IonInput,
   IonDatetime,
-  IonDatetimeButton,
   IonModal,
   IonSelect,
   IonSelectOption,
@@ -31,8 +30,11 @@ import {
   IonText,
   IonToast,
   IonChip,
-  IonButtons
+  IonButtons,
+  IonIcon
 } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { calendarOutline } from 'ionicons/icons';
 import { CandidatosService } from '../services/candidatos.service';
 import { Candidato } from '../models/candidato.model';
 
@@ -59,7 +61,6 @@ import { Candidato } from '../models/candidato.model';
     IonItem,
     IonInput,
     IonDatetime,
-    IonDatetimeButton,
     IonModal,
     IonSelect,
     IonSelectOption,
@@ -73,7 +74,8 @@ import { Candidato } from '../models/candidato.model';
     IonText,
     IonToast,
     IonChip,
-    IonButtons
+    IonButtons,
+    IonIcon
   ]
 })
 export class HomePage implements OnInit {
@@ -85,17 +87,16 @@ export class HomePage implements OnInit {
   nombres: string = '';
   correo: string = '';
   telefono: string = '';
-  fechaNacimiento: string = '';
+  fechaHoy: string = new Date().toISOString().split('T')[0];
+  fechaNacimiento: string = '2000-01-01';
+  fechaDisponibilidad: string = new Date().toISOString().split('T')[0];
 
   cargo: string = '';
   nivelAcademico: string = '';
   experienciaAnios: number | null = null;
   modalidad: string = 'Híbrida';
   habilidadesSeleccionadas: string[] = [];
-
-  fechaDisponibilidad: string = '';
   aspiracionSalarial: number | null = null;
-
   resumen: string = '';
   consentimiento: boolean = false;
 
@@ -109,8 +110,6 @@ export class HomePage implements OnInit {
     'Firebase'
   ];
 
-  fechaHoy: string = new Date().toISOString().split('T')[0];
-
   guardando: boolean = false;
   errorFormulario: string = '';
   mensajeToast: string = '';
@@ -121,7 +120,9 @@ export class HomePage implements OnInit {
   candidatoSeleccionado: Candidato | null = null;
   mostrarModalDetalle: boolean = false;
 
-  constructor() {}
+  constructor() {
+    addIcons({ 'calendar-outline': calendarOutline, calendarOutline });
+  }
 
   async ngOnInit() {
     await this.cargarCandidatos();
@@ -281,13 +282,13 @@ export class HomePage implements OnInit {
     this.nombres = '';
     this.correo = '';
     this.telefono = '';
-    this.fechaNacimiento = '';
+    this.fechaNacimiento = '2000-01-01';
     this.cargo = '';
     this.nivelAcademico = '';
     this.experienciaAnios = null;
     this.modalidad = 'Híbrida';
     this.habilidadesSeleccionadas = [];
-    this.fechaDisponibilidad = '';
+    this.fechaDisponibilidad = this.fechaHoy;
     this.aspiracionSalarial = null;
     this.resumen = '';
     this.consentimiento = false;
