@@ -1,0 +1,16 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // acceso a candidatos para el mvp academico
+    match /candidatos/{candidatoId} {
+      allow read, create: if true;
+      allow update, delete: if false;
+    }
+
+    // deniega por defecto cualquier otra coleccion
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
