@@ -1,13 +1,6 @@
 import { Injectable } from '@angular/core';
 import { initializeApp, getApp, getApps } from 'firebase/app';
-import {
-  addDoc,
-  collection,
-  getDocs,
-  getFirestore,
-  initializeFirestore,
-  serverTimestamp
-} from 'firebase/firestore';
+import { addDoc, collection, getDocs, getFirestore, serverTimestamp } from 'firebase/firestore';
 import { environment } from '../../environments/environment';
 import { Candidato } from '../models/candidato.model';
 
@@ -16,13 +9,7 @@ import { Candidato } from '../models/candidato.model';
 })
 export class CandidatosService {
   private app = getApps().length ? getApp() : initializeApp(environment.firebase);
-  private db = (() => {
-    try {
-      return initializeFirestore(this.app, { experimentalForceLongPolling: true });
-    } catch {
-      return getFirestore(this.app);
-    }
-  })();
+  private db = getFirestore(this.app);
 
   guardarCandidato(candidato: Omit<Candidato, 'id' | 'creadoEn'>) {
     const data = {
